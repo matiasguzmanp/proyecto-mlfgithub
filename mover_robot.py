@@ -17,68 +17,67 @@ robot_serial = SerialControl(port='/dev/ttyUSB0')
 robot_serial.open_serial()
 posicion_encaje=np.array([240,50,10])
 
-for i in range(2):
-	posicion_pieza=main.main()
-	x,y=posicion_pieza[0],posicion_pieza[1]
-	offset_x = 0
-	offset_y = 0
-	offset_z = 0
-	ang=90
-	if y < 0 and x > 220:
-		offset_y = 10
-		offset_x = -22
-		offset_z = 5
-		ang=90
-		posicion_encaje=np.array([220, -50, 10])
-		print("cuadrante y>0, x>220")
-		
-	else:
-		offset_y = -55
-		offset_x = -20
-		offset_z = 10
-		ang=45
-		print("otro cuadrante")
-	posicion_pieza= np.array([int(x) + offset_x,-int(y) + offset_y, offset_z])
+posicion_pieza=main.main()
+x,y=posicion_pieza[0],posicion_pieza[1]
+offset_x = 0
+offset_y = 0
+offset_z = 0
+ang=90
+if y < 0 and x > 220:
+	offset_y = 10
+	offset_x = -22
+	offset_z = 5
+	ang=45
+	posicion_encaje=np.array([220, -50, 10])
+	print("cuadrante y>0, x>220")
 	
+else:
+	offset_y = -55
+	offset_x = -20
+	offset_z = 10
+	ang=45
+	print("otro cuadrante")
+posicion_pieza= np.array([int(x) + offset_x,-int(y) + offset_y, offset_z])
 
-	robot_serial.write_servo(4,90)
-	#va a pieza
-	q0, q1, q2 = robot.inverse_kinematics(posicion_pieza[0], posicion_pieza[1], posicion_pieza[2])
-	robot_serial.write_servo(1, 45 + int(q0))
-	robot_serial.write_servo(2, 90 - int(q1))
-	robot_serial.write_servo(3, q2 + int(q1))
-	time.sleep(2)
 
-	#prende iman
-	robot_serial.write_servo(5,1)
-	time.sleep(2)
-	robot_serial.write_servo(3,30)
-	time.sleep(1)
-	robot_serial.write_servo(3,40)
-	time.sleep(1)
-	robot_serial.write_servo(3,50)
-	time.sleep(1)
-	robot_serial.write_servo(3,60)
-	time.sleep(1)
-	robot_serial.write_servo(3,70)
-	time.sleep(1)
-	#va a home
-	robot_serial.write_servo(1, 45)
-	robot_serial.write_servo(2, 90)
-	robot_serial.write_servo(3, 90)
-	robot_serial.write_servo(4,ang)
-	time.sleep(2)
-	#va a encaje
-	q0, q1, q2 = robot.inverse_kinematics(posicion_encaje[0], posicion_encaje[1], posicion_encaje[2])
-	robot_serial.write_servo(1, 45 + int(q0))
-	robot_serial.write_servo(2, 90 - int(q1))
-	robot_serial.write_servo(3, int(q2) + int(q1))
-	time.sleep(2)
-	#apaga iman
-	robot_serial.write_servo(5,0)
-	time.sleep(2)
-	#va a home
-	robot_serial.write_servo(1, 45)
-	robot_serial.write_servo(2, 90)
-	robot_serial.write_servo(3, 90)
+robot_serial.write_servo(4,90)
+#va a pieza
+q0, q1, q2 = robot.inverse_kinematics(posicion_pieza[0], posicion_pieza[1], posicion_pieza[2])
+robot_serial.write_servo(1, 45 + int(q0))
+robot_serial.write_servo(2, 90 - int(q1))
+robot_serial.write_servo(3, q2 + int(q1))
+time.sleep(2)
+
+#prende iman
+robot_serial.write_servo(5,1)
+time.sleep(2)
+robot_serial.write_servo(3,30)
+time.sleep(1)
+robot_serial.write_servo(3,40)
+time.sleep(1)
+robot_serial.write_servo(3,50)
+time.sleep(1)
+robot_serial.write_servo(3,60)
+time.sleep(1)
+robot_serial.write_servo(3,70)
+time.sleep(1)
+#va a home
+robot_serial.write_servo(1, 45)
+robot_serial.write_servo(2, 90)
+robot_serial.write_servo(3, 90)
+robot_serial.write_servo(4,ang)
+time.sleep(2)
+#va a encaje
+q0, q1, q2 = robot.inverse_kinematics(posicion_encaje[0], posicion_encaje[1], posicion_encaje[2])
+robot_serial.write_servo(1, 45 + int(q0))
+robot_serial.write_servo(2, 90 - int(q1))
+robot_serial.write_servo(3, int(q2) + int(q1))
+time.sleep(2)
+#apaga iman
+robot_serial.write_servo(5,0)
+time.sleep(2)
+#va a home
+robot_serial.write_servo(1, 45)
+robot_serial.write_servo(2, 90)
+robot_serial.write_servo(3, 90)
 
